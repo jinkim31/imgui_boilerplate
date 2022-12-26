@@ -6,32 +6,33 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(SRC_COMMON
         src/main.cpp
         # imgui
-        imgui/imgui.cpp
-        imgui/imgui_widgets.cpp
-        imgui/imgui_tables.cpp
-        imgui/imgui_demo.cpp
-        imgui/imgui_draw.cpp
-        #implot
-        implot/
-
+        lib/imgui/imgui.cpp
+        lib/imgui/imgui_widgets.cpp
+        lib/imgui/imgui_tables.cpp
+        lib/imgui/imgui_demo.cpp
+        lib/imgui/imgui_draw.cpp
+        # implot
+        lib/implot/implot.cpp
+        lib/implot/implot_items.cpp
+        lib/implot/implot_demo.cpp
 )
 
 if(UNIX)
         add_executable(imgui_boilerplate
                 ${SRC_COMMON}
-                imgui/backends/imgui_impl_glut.cpp
-                imgui/backends/imgui_impl_opengl2.cpp
+                lib/imgui/backends/imgui_impl_glut.cpp
+                lib/imgui/backends/imgui_impl_opengl2.cpp
         )
 
         target_link_libraries(imgui_boilerplate
-        glut
-        GL
-)
+                glut
+                GL
+        )
 elseif(APPLE)
         add_executable(imgui_boilerplate
                 ${SRC_COMMON}
-                imgui/backends/imgui_impl_metal.mm
-                imgui/backends/imgui_impl_glfw.cpp
+                lib/imgui/backends/imgui_impl_metal.mm
+                lib/imgui/backends/imgui_impl_glfw.cpp
         )
 
         target_link_libraries(imgui_boilerplate
@@ -45,6 +46,7 @@ elseif(APPLE)
 endif()
 
 target_include_directories(imgui_boilerplate PUBLIC
-        imgui
-        imgui/backends
+        lib/imgui
+        lib/imgui/backends
+        lib/implot
 )

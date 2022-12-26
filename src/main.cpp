@@ -1,6 +1,8 @@
 #include <imgui.h>
 #include "imgui_impl_glut.h"
 #include "imgui_impl_opengl2.h"
+#include <implot.h>
+
 #define GL_SILENCE_DEPRECATION
 #ifdef __APPLE__
     #include <GLUT/glut.h>
@@ -55,6 +57,10 @@ void my_display_code()
             show_another_window = false;
         ImGui::End();
     }
+
+    {
+        ImPlot::ShowDemoWindow();
+    }
 }
 
 void glut_display_func()
@@ -102,6 +108,7 @@ int main(int argc, char** argv)
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
+    ImPlot::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
@@ -137,6 +144,7 @@ int main(int argc, char** argv)
     // Cleanup
     ImGui_ImplOpenGL2_Shutdown();
     ImGui_ImplGLUT_Shutdown();
+    ImPlot::DestroyContext();
     ImGui::DestroyContext();
 
     return 0;
