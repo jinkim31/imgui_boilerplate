@@ -1,58 +1,50 @@
 cmake_minimum_required(VERSION 3.0)
 project(imgui_boilerplate)
-
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# imgui library
+set(SRC_COMMON
+        src/main.cpp
+        # imgui
+        imgui/imgui.cpp
+        imgui/imgui_widgets.cpp
+        imgui/imgui_tables.cpp
+        imgui/imgui_demo.cpp
+        imgui/imgui_draw.cpp
+        #implot
+        implot/
 
-file(GLOB IMGUI_SRC
-        "imgui/*.cpp"
-        imgui/backends/imgui_impl_metal.mm
-        imgui/backends/imgui_impl_glfw.cpp
 )
 
-add_library(imgui STATIC
-    ${IMGUI_SRC}
-)
+if(UNIX)
+        add_executable(imgui_boilerplate
+                ${SRC_COMMON}
+                imgui/backends/imgui_impl_glut.cpp
+                imgui/backends/imgui_impl_opengl2.cpp
+        )
 
-target_include_directories(imgui PUBLIC
+        target_link_libraries(imgui_boilerplate
+        glut
+        GL
+)
+elseif(APPLE)
+        add_executable(imgui_boilerplate
+                ${SRC_COMMON}
+                imgui/backends/imgui_impl_metal.mm
+                imgui/backends/imgui_impl_glfw.cpp
+        )
+
+        target_link_libraries(imgui_boilerplate
+                "-framework Metal"
+                "-framework MetalKit"
+                "-framework AppKit"
+                "-framework Foundation"
+                "-framework QuartzCore"
+                "glfw"
+        )
+endif()
+
+target_include_directories(imgui_boilerplate PUBLIC
         imgui
         imgui/backends
 )
-
-target_link_libraries(imgui
-        "-framework Metal"
-        "-framework MetalKit"
-        "-framework AppKit"
-        "-framework Foundation"
-        "-framework QuartzCore"
-        "glfw"
-        )
-
-# implot library
-
-add_library(implot STATIC
-        implot/implot.cpp
-        implot/implot_items.cpp
-        implot/implot_demo.cpp
-        )
-
-target_include_directories(implot PUBLIC
-        implot)
-
-target_link_libraries(implot
-        imgui)
-
-# main executable
-add_executable(imgui_boilerplate
-        src/main.mm)
-
-target_link_libraries(imgui_boilerplate
-        imgui
-        implot
-)
-
-target_include_directories(imgui_boilerplate PRIVATE
-        IconFontCppHeaders
-        )

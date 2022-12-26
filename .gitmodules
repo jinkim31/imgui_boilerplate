@@ -8,3 +8,4 @@
 [submodule "IconFontCppHeaders"]
 	path = IconFontCppHeaders
 	url = https://github.com/juliettef/IconFontCppHeaders.git
+	branch = main
