@@ -2,3 +2,9 @@
 	path = imgui
 	url = https://github.com/ocornut/imgui.git
 	branch = docking
+[submodule "implot"]
+	path = implot
+	url = https://github.com/epezent/implot.git
+[submodule "IconFontCppHeaders"]
+	path = IconFontCppHeaders
+	url = https://github.com/juliettef/IconFontCppHeaders.git

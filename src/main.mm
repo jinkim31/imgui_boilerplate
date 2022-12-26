@@ -6,7 +6,10 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_metal.h"
+#include <implot.h>
 #include <stdio.h>
+#include <implot_demo.cpp>
+#include <IconsFontAwesome5.h>
 
 #define GLFW_INCLUDE_NONE
 #define GLFW_EXPOSE_NATIVE_COCOA
@@ -15,6 +18,12 @@
 
 #import <Metal/Metal.h>
 #import <QuartzCore/QuartzCore.h>
+
+constexpr auto ColorFromBytes = [](uint8_t r, uint8_t g, uint8_t b)
+{
+    return ImVec4((float)r / 255.0f, (float)g / 255.0f, (float)b / 255.0f, 1.0f);
+};
+
 
 static void glfw_error_callback(int error, const char* description)
 {
@@ -33,16 +42,82 @@ int main(int, char**)
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;      // Enable Multi-Viewport / Platform Windows
 
     // Setup style
-    ImGui::StyleColorsDark();
+    //ImGui::StyleColorsDark();
     //ImGui::StyleColorsLight();
+    auto& style = ImGui::GetStyle();
+    ImVec4* colors = style.Colors;
 
-    // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
-    ImGuiStyle& style = ImGui::GetStyle();
-    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-    {
-        style.WindowRounding = 0.0f;
-        style.Colors[ImGuiCol_WindowBg].w = 1.0f;
-    }
+    const ImVec4 bgColor           = ColorFromBytes(37, 37, 38);
+    const ImVec4 lightBgColor      = ColorFromBytes(82, 82, 85);
+    const ImVec4 veryLightBgColor  = ColorFromBytes(90, 90, 95);
+
+    const ImVec4 panelColor        = ColorFromBytes(51, 51, 55);
+    const ImVec4 panelHoverColor   = ColorFromBytes(29, 151, 236);
+    const ImVec4 panelActiveColor  = ColorFromBytes(0, 119, 200);
+
+    const ImVec4 textColor         = ColorFromBytes(200, 200, 200);
+    const ImVec4 textDisabledColor = ColorFromBytes(151, 151, 151);
+    const ImVec4 borderColor       = ColorFromBytes(78, 78, 78);
+
+    colors[ImGuiCol_Text]                 = textColor;
+    colors[ImGuiCol_TextDisabled]         = textDisabledColor;
+    colors[ImGuiCol_TextSelectedBg]       = panelActiveColor;
+    colors[ImGuiCol_WindowBg]             = bgColor;
+    colors[ImGuiCol_ChildBg]              = bgColor;
+    colors[ImGuiCol_PopupBg]              = bgColor;
+    colors[ImGuiCol_Border]               = borderColor;
+    colors[ImGuiCol_BorderShadow]         = borderColor;
+    colors[ImGuiCol_FrameBg]              = panelColor;
+    colors[ImGuiCol_FrameBgHovered]       = panelHoverColor;
+    colors[ImGuiCol_FrameBgActive]        = panelActiveColor;
+    colors[ImGuiCol_TitleBg]              = bgColor;
+    colors[ImGuiCol_TitleBgActive]        = bgColor;
+    colors[ImGuiCol_TitleBgCollapsed]     = bgColor;
+    colors[ImGuiCol_MenuBarBg]            = panelColor;
+    colors[ImGuiCol_ScrollbarBg]          = panelColor;
+    colors[ImGuiCol_ScrollbarGrab]        = lightBgColor;
+    colors[ImGuiCol_ScrollbarGrabHovered] = veryLightBgColor;
+    colors[ImGuiCol_ScrollbarGrabActive]  = veryLightBgColor;
+    colors[ImGuiCol_CheckMark]            = panelActiveColor;
+    colors[ImGuiCol_SliderGrab]           = panelHoverColor;
+    colors[ImGuiCol_SliderGrabActive]     = panelActiveColor;
+    colors[ImGuiCol_Button]               = panelColor;
+    colors[ImGuiCol_ButtonHovered]        = panelHoverColor;
+    colors[ImGuiCol_ButtonActive]         = panelHoverColor;
+    colors[ImGuiCol_Header]               = panelColor;
+    colors[ImGuiCol_HeaderHovered]        = panelHoverColor;
+    colors[ImGuiCol_HeaderActive]         = panelActiveColor;
+    colors[ImGuiCol_Separator]            = borderColor;
+    colors[ImGuiCol_SeparatorHovered]     = borderColor;
+    colors[ImGuiCol_SeparatorActive]      = borderColor;
+    colors[ImGuiCol_ResizeGrip]           = bgColor;
+    colors[ImGuiCol_ResizeGripHovered]    = panelColor;
+    colors[ImGuiCol_ResizeGripActive]     = lightBgColor;
+    colors[ImGuiCol_PlotLines]            = panelActiveColor;
+    colors[ImGuiCol_PlotLinesHovered]     = panelHoverColor;
+    colors[ImGuiCol_PlotHistogram]        = panelActiveColor;
+    colors[ImGuiCol_PlotHistogramHovered] = panelHoverColor;
+    //colors[ImGuiCol_ModalWindowDarkening] = bgColor;
+    colors[ImGuiCol_DragDropTarget]       = bgColor;
+    colors[ImGuiCol_NavHighlight]         = bgColor;
+    colors[ImGuiCol_DockingPreview]       = panelActiveColor;
+    colors[ImGuiCol_Tab]                  = bgColor;
+    colors[ImGuiCol_TabActive]            = panelActiveColor;
+    colors[ImGuiCol_TabUnfocused]         = bgColor;
+    colors[ImGuiCol_TabUnfocusedActive]   = panelActiveColor;
+    colors[ImGuiCol_TabHovered]           = panelHoverColor;
+
+    style.WindowRounding    = 0.0f;
+    style.ChildRounding     = 0.0f;
+    style.FrameRounding     = 0.0f;
+    style.GrabRounding      = 0.0f;
+    style.PopupRounding     = 0.0f;
+    style.ScrollbarRounding = 0.0f;
+    style.TabRounding       = 0.0f;
+
+    //static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_16_FA, 0 };
+    //ImFontConfig icons_config; icons_config.MergeMode = false; icons_config.PixelSnapH = true;
+    //io.Fonts->AddFontFromFileTTF( FONT_ICON_FILE_NAME_FAS, 16.0f, &icons_config, icons_ranges );
 
     // Load Fonts
     // - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
@@ -55,7 +130,12 @@ int main(int, char**)
     //io.Fonts->AddFontDefault();
     //io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\segoeui.ttf", 18.0f);
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/DroidSans.ttf", 16.0f);
-    io.Fonts->AddFontFromFileTTF("../imgui/misc/fonts/Roboto-Medium.ttf", 16.0f);
+
+    CGFloat scale = NSScreen.mainScreen.backingScaleFactor;
+    ImFontConfig cfg;
+    cfg.SizePixels = 16.0f * scale;
+    io.Fonts->AddFontFromFileTTF("../imgui/misc/fonts/Roboto-Medium.ttf", cfg.SizePixels, &cfg);
+    io.FontGlobalScale = 1.0f / scale;
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Cousine-Regular.ttf", 15.0f);
     //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
     //IM_ASSERT(font != NULL);
@@ -125,12 +205,13 @@ int main(int, char**)
             // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
             if (show_demo_window)
                 ImGui::ShowDemoWindow(&show_demo_window);
-                ImGui::ShowDemoWindow(&show_demo_window);
 
             // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
             {
                 static float f = 0.0f;
                 static int counter = 0;
+
+                ImGui::Text( ICON_FA_PAINT_BRUSH "  Paint" );
 
                 ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
 
