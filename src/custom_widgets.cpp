@@ -14,7 +14,7 @@ void Widget::setStyle()
     const ImVec4 bgColor           = ColorFromBytes(37, 37, 38);
     const ImVec4 lightBgColor      = ColorFromBytes(82, 82, 85);
     const ImVec4 veryLightBgColor  = ColorFromBytes(90, 90, 95);
-
+    const ImVec4 veryDarkBgColor   = ColorFromBytes(30, 30, 30);
     const ImVec4 panelColor        = ColorFromBytes(51, 51, 55);
     const ImVec4 panelHoverColor   = ColorFromBytes(29, 151, 236);
     const ImVec4 panelActiveColor  = ColorFromBytes(0, 119, 200);
@@ -51,7 +51,7 @@ void Widget::setStyle()
     colors[ImGuiCol_Header]               = panelColor;
     colors[ImGuiCol_HeaderHovered]        = panelHoverColor;
     colors[ImGuiCol_HeaderActive]         = panelActiveColor;
-    colors[ImGuiCol_Separator]            = borderColor;
+    colors[ImGuiCol_Separator]            = veryDarkBgColor;
     colors[ImGuiCol_SeparatorHovered]     = borderColor;
     colors[ImGuiCol_SeparatorActive]      = borderColor;
     colors[ImGuiCol_ResizeGrip]           = bgColor;
