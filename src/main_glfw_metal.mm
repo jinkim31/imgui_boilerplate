@@ -6,10 +6,9 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_metal.h"
-#include <implot.h>
 #include <stdio.h>
-#include <implot_demo.cpp>
-#include <IconsFontAwesome5.h>
+#include <implot.h>
+#include "custom_widgets.h"
 
 #define GLFW_INCLUDE_NONE
 #define GLFW_EXPOSE_NATIVE_COCOA
@@ -29,6 +28,7 @@ int main(int, char**)
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
+    ImPlot::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard Controls
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;   // Enable Gamepad Controls
@@ -39,6 +39,7 @@ int main(int, char**)
     //ImGui::StyleColorsDark();
     //ImGui::StyleColorsLight();
     auto& style = ImGui::GetStyle();
+    Widget::setStyle();
 
     //static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_16_FA, 0 };
     //ImFontConfig icons_config; icons_config.MergeMode = false; icons_config.PixelSnapH = true;
@@ -59,7 +60,7 @@ int main(int, char**)
     CGFloat scale = NSScreen.mainScreen.backingScaleFactor;
     ImFontConfig cfg;
     cfg.SizePixels = 16.0f * scale;
-    io.Fonts->AddFontFromFileTTF("../imgui/misc/fonts/Roboto-Medium.ttf", cfg.SizePixels, &cfg);
+    io.Fonts->AddFontFromFileTTF("../lib/imgui/misc/fonts/Roboto-Medium.ttf", cfg.SizePixels, &cfg);
     io.FontGlobalScale = 1.0f / scale;
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Cousine-Regular.ttf", 15.0f);
     //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
@@ -136,8 +137,6 @@ int main(int, char**)
                 static float f = 0.0f;
                 static int counter = 0;
 
-                ImGui::Text( ICON_FA_PAINT_BRUSH "  Paint" );
-
                 ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
 
                 ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
@@ -166,6 +165,9 @@ int main(int, char**)
                 ImGui::End();
             }
 
+            {
+                ImPlot::ShowDemoWindow();
+            }
             // Rendering
             ImGui::Render();
             ImGui_ImplMetal_RenderDrawData(ImGui::GetDrawData(), commandBuffer, renderEncoder);
@@ -188,6 +190,7 @@ int main(int, char**)
     // Cleanup
     ImGui_ImplMetal_Shutdown();
     ImGui_ImplGlfw_Shutdown();
+    ImPlot::DestroyContext();
     ImGui::DestroyContext();
 
     glfwDestroyWindow(window);

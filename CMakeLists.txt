@@ -20,20 +20,9 @@ set(SRC_COMMON
         src/custom_widgets.cpp
 )
 
-if(UNIX)
+if(APPLE)
         add_executable(${EXECUTABLE_NAME}
-                src/main_glut_opengl2.cpp
-                ${SRC_COMMON}
-                lib/imgui/backends/imgui_impl_glut.cpp
-                lib/imgui/backends/imgui_impl_opengl2.cpp
-        )
-        target_link_libraries(${EXECUTABLE_NAME}
-                glut
-                GL
-        )
-elseif(APPLE)
-        add_executable(${EXECUTABLE_NAME}
-                src/main_glfw_metal.cpp
+                src/main_glfw_metal.mm
                 ${SRC_COMMON}
                 lib/imgui/backends/imgui_impl_glfw.cpp
                 lib/imgui/backends/imgui_impl_metal.mm
@@ -45,6 +34,17 @@ elseif(APPLE)
                 "-framework Foundation"
                 "-framework QuartzCore"
                 "glfw"
+        )
+elseif(UNIX)
+        add_executable(${EXECUTABLE_NAME}
+                src/main_glut_opengl2.cpp
+                ${SRC_COMMON}
+                lib/imgui/backends/imgui_impl_glut.cpp
+                lib/imgui/backends/imgui_impl_opengl2.cpp
+        )
+        target_link_libraries(${EXECUTABLE_NAME}
+                glut
+                GL
         )
 endif()
 
