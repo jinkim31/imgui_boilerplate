@@ -5,6 +5,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(EXECUTABLE_NAME app)
 
+find_package(serial REQUIRED)
+
+message(serial)
+
 set(SRC_COMMON
         # imgui
         lib/imgui/imgui.cpp
@@ -18,6 +22,7 @@ set(SRC_COMMON
         lib/implot/implot_demo.cpp
         # user
         src/custom_widgets.cpp
+        src/application.cpp
 )
 
 if(APPLE)
@@ -52,4 +57,8 @@ target_include_directories(${EXECUTABLE_NAME} PUBLIC
         lib/imgui
         lib/imgui/backends
         lib/implot
+        ${serial_INCLUDE_DIRS}
 )
+
+target_link_libraries(${EXECUTABLE_NAME}
+        ${serial_LIBRARIES})
