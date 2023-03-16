@@ -5,10 +5,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(EXECUTABLE_NAME app)
 
-find_package(serial REQUIRED)
-
-message(serial)
-
 set(SRC_COMMON
         # imgui
         lib/imgui/imgui.cpp
@@ -42,7 +38,7 @@ if(APPLE)
         )
 elseif(UNIX)
         add_executable(${EXECUTABLE_NAME}
-                src/main_glut_opengl2.cpp
+                src/main_glwf_opengl2.cpp
                 ${SRC_COMMON}
                 lib/imgui/backends/imgui_impl_glut.cpp
                 lib/imgui/backends/imgui_impl_opengl2.cpp
@@ -51,14 +47,24 @@ elseif(UNIX)
                 glut
                 GL
         )
+else()
+        find_package(FreeGLUT REQUIRED PATHS "C:/msys64/mingw64/bin")
+        find_library(glfw3 NAMES glwf3 libglfw3 PATHS "C:/GLFW/lib-mingw-w64" REQUIRED)
+        add_executable(${EXECUTABLE_NAME}
+                src/main_glwf_opengl2.cpp
+                ${SRC_COMMON}
+                lib/imgui/backends/imgui_impl_opengl2.cpp
+                lib/imgui/backends/imgui_impl_glfw.cpp
+                )
+        target_include_directories(${EXECUTABLE_NAME} PRIVATE "C:/GLFW/include")
+        target_link_libraries(${EXECUTABLE_NAME}
+                FreeGLUT::freeglut
+                ${glfw3}
+        )
 endif()
 
 target_include_directories(${EXECUTABLE_NAME} PUBLIC
         lib/imgui
         lib/imgui/backends
         lib/implot
-        ${serial_INCLUDE_DIRS}
 )
-
-target_link_libraries(${EXECUTABLE_NAME}
-        ${serial_LIBRARIES})
